@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: net-project-deployment
+spec:
+  selector:
+    matchLabels:
+      app: net-project
+  template:
+    metadata:
+      labels:
+        app: net-project
+    spec:
+      containers:
+        - name: net-project
+          image: madcake1/net_project.Api:v1
+          resources:
+            limits:
+              memory: "128Mi"
+              cpu: "500m"
+          ports:
+            - containerPort: 80
+          env:
+            - name: MongoDBSettings__Host
+              value: mongodb-service
+            - name: MongoDBSettings__Password
+              valueFrom:
+                secretKeyRef:
+                  name: net-project-secrets
+                  key: mongodb-password
+          livenessProbe:
+            httpGet:
+              path: /healtz/live
+              port: 80
+          readinessProbe:
+            httpGet:
+              path: /healtz/ready
+              port: 80
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: net-project-service
+spec:
+  type: LoadBalancer
+  selector:
+    app: net-project
+  ports:
+    - port: 80
+      targetPort: 80

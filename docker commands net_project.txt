@@ -1,0 +1,5 @@
+Start up backend service with ports, host and password:
+docker run -it --rm -p 8080:80 -e MongoDBSettings:Host=mongo -e MongoDBSettings:Password=password --network=net5tutorial net_project:v{version}
+
+Start up mongo container with name, pass and ports:
+docker run -d --rm --name mongo -p 27017:27017 -v mongodbdata:/data/db -e MONGO_INITDB_ROOT_USERNAME=mongoadmin -e MONGO_INITDB_ROOT_PASSWORD=password --network=net5tutorial mongo 
