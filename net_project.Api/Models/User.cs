@@ -21,8 +21,8 @@ namespace net_project.Api.Api.Models
 
           public DateTimeOffset CreatedDate { get; set; }  
 
-          public IList<Post> Posts { get; }
+          public IList<Post> Posts { get; set; }
 
-          public IList<Comment> Comments { get; }   
+          public IList<Comment> Comments { get; set; }   
      }
 }

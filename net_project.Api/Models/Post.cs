@@ -17,6 +17,6 @@ namespace net_project.Api.Api.Models
 
           public User User { get; set; }
 
-          public IList<Comment> Comments { get; }     
+          public IList<Comment> Comments { get; set;}     
      }
 }

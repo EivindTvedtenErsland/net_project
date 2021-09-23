@@ -13,7 +13,6 @@ using FluentAssertions;
 using System.Collections;
 using System.Collections.Generic;
 
-/* 
 namespace net_project.UnitTests
 {
     public class PostsControllerTest
@@ -74,7 +73,8 @@ namespace net_project.UnitTests
         public async Task GetPostsAsync_WithExistingPosts_ReturnsAllPosts()
         {
             // Arrange
-            var expectedPosts = new[] { CreateRandomPost(), CreateRandomPost(), CreateRandomPost() };
+            var expectedPosts = new[] { CreateRandomPost(), 
+                                        CreateRandomPost(), CreateRandomPost() };
             repoStub.Setup(repo => repo.GetPostsAsync())
                                     .ReturnsAsync(expectedPosts);
 
@@ -88,6 +88,7 @@ namespace net_project.UnitTests
         }
 
         // Check if GetPostsAsync returns all Posts in repository
+        /*
         [Fact]
         public async Task GetPostsAsync_WithMatchingPosts_ReturnsMatchingPosts()
         {
@@ -115,6 +116,7 @@ namespace net_project.UnitTests
                 Post => Post.Title == expectedPosts[0].Title
             );
         }
+        */
 
         // Check if PostPostAsync returns posted Post
         [Fact]
@@ -155,7 +157,7 @@ namespace net_project.UnitTests
             var controller = new PostsController(repoStub.Object, loggerStub.Object);
 
             var updatedPost = new UpdatePostDto(Guid.NewGuid().ToString(), 
-            Guid.NewGuid().ToString(), exisitingPost.Price + 3);
+            Guid.NewGuid().ToString(), null, null);
 
             // Act
             var result = await controller.PutPostAsync(exisitingPost.Id, updatedPost);
@@ -182,8 +184,99 @@ namespace net_project.UnitTests
             // Assert
             result.Should().BeOfType<NoContentResult>();
         }
-    }
-        //public async Task DeletePostAsync_WithPostToDelete_ReturnsNoContent()  
+
+        [Fact]
+        public async Task GetCommentsOfPostAsync_WithExistingComments_ReturnsComments()
+        {
+            // Arrange
+            var exisitingPost = CreateRandomPost();
+            var existingComments = new[] { CreateRandomComment(), 
+                                        CreateRandomComment(), CreateRandomComment() };
+
+            foreach (Comment comment in existingComments)
+            {
+                exisitingPost.Comments.Add(comment);
+            }
+            
+            repoStub.Setup(repo => repo.GetPostAsync(It.IsAny<Guid>()))
+                                    .ReturnsAsync(exisitingPost);
+
+            var controller = new PostsController(repoStub.Object, loggerStub.Object);
+
+            // Act
+            var result = await controller.GetCommentsOfPostAsync(Guid.NewGuid());
+
+            // Assert
+            result.Should().OnlyContain(n => n > 0);
+            result.Should().HaveCount(3, "Three random comments were added to the comment collection");
+
+        }
+
+        
+        [Fact]
+        public async Task GetCommentsOfPostAsync_WithUnexistingComments_ReturnsEmptyCollection()
+        {
+            // Arrange
+            var existingPost = CreateRandomPost();
+            
+            repoStub.Setup(repo => repo.GetPostAsync(It.IsAny<Guid>()))
+                                    .ReturnsAsync(existingPost);
+
+            var controller = new PostsController(repoStub.Object, loggerStub.Object);
+
+            // Act
+            var result = await controller.GetCommentsOfPostAsync(Guid.NewGuid());
+
+            // Assert
+            result.Should().OnlyContain(n => n == 0);
+            result.Should().HaveCount(0, "Empty collection");
+
+        }
+
+        [Fact]
+        public async Task GetCommentOfPostAsync_WithMatchingComment_ReturnsComment()
+        {
+            // Arrange
+            var existingPost = CreateRandomPost();
+            var existingComment = new Comment {Title = "Match Title"};
+            
+            var match = "Match";
+
+            existingPost.Comments.Add(existingComment);
+
+            repoStub.Setup(repo => repo.GetPostAsync(It.IsAny<Guid>()))
+                                    .ReturnsAsync(existingPost);
+
+            var controller = new PostsController(repoStub.Object, loggerStub.Object);
+
+            // Act
+            var result = await controller.GetCommentOfPostAsync(Guid.NewGuid(), match);
+
+            // Assert
+            result.Should().OnlyContain(n => n == 1);
+            result.Should().Contain(comment => comment.Title == match);
+
+        }
+
+        [Fact]
+         public async Task GetCommentOfPostAsync_WithoutMatchingComment_ReturnsNotFound()
+        {
+            // Arrange
+            var exisitingPost = CreateRandomPost();
+            
+            repoStub.Setup(repo => repo.GetPostAsync(It.IsAny<Guid>()))
+                                    .ReturnsAsync(exisitingPost);
+
+            var controller = new PostsController(repoStub.Object, loggerStub.Object);
+
+            // Act
+            var result = await controller.GetCommentOfPostAsync(Guid.NewGuid());
+
+            // Assert
+            result.Should().OnlyContain(n => n == 0);
+            result.Should().HaveCount(0, "Empty collection");
+
+        }
 
         private Post CreateRandomPost()
         {
@@ -222,8 +315,8 @@ namespace net_project.UnitTests
                CreatedDate = DateTimeOffset.UtcNow,
                User = new User(),
                Post = new Post()
-            };
+            };  
         }
     }
 } 
-*/
+

@@ -18,17 +18,17 @@ namespace net_project.Api.Api.Controllers
     {
         private readonly ItemsRepositoryInterface _itemsRepositoryInterface;
         ILogger<ItemsController> _logger;
-        public ItemsController (ItemsRepositoryInterface ItemsRepositoryInterface, ILogger<ItemsController> logger) 
+        public ItemsController (ItemsRepositoryInterface itemsRepositoryInterface, ILogger<ItemsController> logger) 
         {
             this._logger = logger;
-            this._itemsRepositoryInterface = ItemsRepositoryInterface;
+            this._itemsRepositoryInterface = itemsRepositoryInterface;
         }
      
         [HttpGet]
         public async Task<IEnumerable<ItemDto>> GetItemsAsync(string match = null)
         {
-            var items = (await _itemsRepositoryInterface.GetItemsAsync()).
-                        Select( item => item.ItemAsDto());
+            var items = (await _itemsRepositoryInterface.GetItemsAsync())
+                                                        .Select( item => item.ItemAsDto());
 
             if (!string.IsNullOrWhiteSpace(match))
             {

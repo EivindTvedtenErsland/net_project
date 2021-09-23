@@ -20,6 +20,7 @@ namespace net_project.UnitTests
         private readonly Mock<ILogger<ItemsController>> loggerStub = new();
         
         private Random random_int = new();
+        
         // Naming convention: UnitOfWork_StateUnderTest_ExpectedResultOrBehaviour
 
         // Check if GetItemAsync returns NotFound if no item that fit criteria
@@ -46,6 +47,7 @@ namespace net_project.UnitTests
         {
             // Arrange
             var expectedItem = CreateRandomItem();
+
             repoStub.Setup(repo => repo.GetItemAsync(It.IsAny<Guid>()))
                                         .ReturnsAsync(expectedItem);
 
@@ -108,8 +110,7 @@ namespace net_project.UnitTests
 
             // Assert    
             actualItems.Should().OnlyContain(
-                item => item.Name == expectedItems[1].Name
-            );
+                                item => item.Name == expectedItems[1].Name);
         }
 
         // Check if PostItemAsync returns posted item

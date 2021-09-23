@@ -8,7 +8,7 @@ using net_project.Api.Api.Interfaces;
 using net_project.Api.Api.Models;
 
 // TODO: Implement GetCommentOfPost/GetCommentsOfPost
-/*
+
 namespace net_project.Api.Api.Repositories
 {
      public class MongoDBPostsRepository : PostsRepositoryInterface
@@ -52,15 +52,14 @@ namespace net_project.Api.Api.Repositories
                await postsCollectionMongoDB.ReplaceOneAsync(filter, post);
           }
 
-          public Task<IEnumerable<Comment>> GetCommentsOfPost(Guid guid)
+          public Task<IEnumerable<Comment>> GetCommentsOfPostAsync(Guid guid)
           {
                throw new NotImplementedException();
           }
 
-          public Task<Comment> GetCommentOfPost(Guid guid)
+          public Task<Comment> GetCommentOfPostAsync(Guid guid, string title = "")
           {
                throw new NotImplementedException();
           }
      }
 }
-*/

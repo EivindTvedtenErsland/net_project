@@ -14,7 +14,7 @@ namespace net_project.Api.Api.Interfaces
         Task PostPostAsync(Post post);
         Task PutPostAsync(Post post);
         Task DeletePostAsync(Post post);
-        Task<IEnumerable<Comment>> GetCommentsOfPost(Post post);
-        Task<Comment> GetCommentOfPost(Post post, string title = "");
+        Task<IEnumerable<Comment>> GetCommentsOfPostAsync(Guid guid);
+        Task<Comment> GetCommentOfPostAsync(Guid guid, string title = "");
     }
 }
